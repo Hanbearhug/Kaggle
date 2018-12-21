@@ -22,3 +22,7 @@ from tensorflow.keras.applications import ResNet50,MobileNetV2
 from tensorflow.keras.applications.mobilenet import preprocess_input
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 ```
+
+## Distribution of Labels
+Majority of images only appear in training dataset once; this makes this situation a great candiate for a one shot learning simese network. 
+
