@@ -24,5 +24,5 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 ```
 
 ## Distribution of Labels
-Majority of images only appear in training dataset once; this makes this situation a great candiate for a one shot learning simese network. 
+Majority of images only appear in training dataset once; this makes this situation a great candiate for a one shot learning simese network. \\
 ![](https://github.com/Hanbearhug/Kaggle/blob/master/DistributionOfClassExcludingNewWhale.png)
