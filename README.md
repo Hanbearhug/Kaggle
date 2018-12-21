@@ -27,3 +27,39 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 Majority of images only appear in training dataset once; this makes this situation a great candiate for a one shot learning simese network. 
 
 ![](https://github.com/Hanbearhug/Kaggle/blob/master/DistributionOfClassExcludingNewWhale.png)
+
+## PreProccessing 
+
+Training is performed on images subjected to the following operations:
+
+* Transform to black and white;
+* Normalized to 0 mean and unit variance
+
+```
+im_arrays = []
+labels = []
+fs = {} ##dictionary with original size of each photo 
+for index, row in tqdm(train.iterrows()):
+    im = cv2.imread(os.path.join(train_imgs,row['Image']),0)
+    norm_image = cv2.normalize(im, None, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F)
+    new_image = cv2.resize(norm_image,(resize,resize))
+    new_image = np.reshape(new_image,[resize,resize,1])
+    im_arrays.append(new_image)
+    labels.append(d[row['Id']])
+    fs[row['Image']] = norm_image.shape
+train_ims = np.array(im_arrays)
+train_labels = np.array(labels)
+```
+
+通过enumrate函数来将图片id转换成对应的label是一个pythonic的语法
+
+```
+d = {cat: k for k,cat in enumerate(train.Id.unique())}
+labels.append(d[row['Id']])
+```
+
+通过tqdm函数可以显示进度条
+
+```
+for index, row in tqdm(train.iterrows()):
+```
