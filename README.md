@@ -63,3 +63,6 @@ labels.append(d[row['Id']])
 ```
 for index, row in tqdm(train.iterrows()):
 ```
+
+cv2.normalize函数用于图片的归一化，这里使用的是平移放缩归一化，除此以外还有四种归一化方式,alpha表示归一化范围的下界，beta表示归一化范围的上界
+cv2.resize函数用于图片的比例放缩
