@@ -66,3 +66,18 @@ for index, row in tqdm(train.iterrows()):
 
 cv2.normalize函数用于图片的归一化，这里使用的是平移放缩归一化，除此以外还有四种归一化方式,alpha表示归一化范围的下界，beta表示归一化范围的上界
 cv2.resize函数用于图片的比例放缩
+
+```
+keras.utils.to_categorical
+```
+用于将一维的label做onehot处理，其中维数要么明确指定，没有明确指定时使用最大值+1作为维数
+
+```
+gen =ImageDataGenerator(zoom_range = 0.2,
+                            horizontal_flip = True
+                       )
+```
+
+tf.keras.preprocessing.image.ImageDataGenerator:Generate minibatches of image data with real-time data augmentation.\
+提供了数据输入的功能，其中提供了多种数据增强的操作，如，随机平移，翻转，旋转，剪切，放大缩小，ZCA白化操作，样本标准化操作，同时提供flow方法，可以用于生成图片的存储或者按照batch输入神经网络
+
