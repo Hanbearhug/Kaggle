@@ -81,3 +81,62 @@ gen =ImageDataGenerator(zoom_range = 0.2,
 tf.keras.preprocessing.image.ImageDataGenerator:Generate minibatches of image data with real-time data augmentation.\
 提供了数据输入的功能，其中提供了多种数据增强的操作，如，随机平移，翻转，旋转，剪切，放大缩小，ZCA白化操作，样本标准化操作，同时提供flow方法，可以用于生成图片的存储或者按照batch输入神经网络
 
+```
+reduceLROnPlat = ReduceLROnPlateau(monitor='val_top_5_accuracy',
+                                      factor = 0.50,
+                                      patience = 3,
+                                      verbose = 1, 
+                                      mode = 'max', 
+                                      min_delta = .001,
+                                      min_lr = 1e-5
+                                  )
+
+earlystop = EarlyStopping(monitor='val_top_5_accuracy',
+                            mode= 'max',
+                            patience= 5 )
+
+callbacks = [earlystop, reduceLROnPlat]
+```
+
+tf.keras.callbacks.ReduceLROnPlateau:Reduce learning rate when a metric has stopped improving.
+
+Models often benefit from reducing the learning rate by a factor of 2-10 once learning stagnates. This callback monitors a quantity and if no improvement is seen for a 'patience' number of epochs, the learning rate is reduced.\
+提供了调节学习率的方法，包括监控对象，每次调整的幅度，上调或者是下调，最小的学习率下界等等。
+
+
+tf.keras.callbacks.EarlyStopping:Stop training when a monitored quantity has stopped improving.
+
+提供了停止训练的监控条件，如提升的判别条件，多少次迭代没有提升后停止训练等等。
+
+```
+model = ResNet50(input_shape=(resize, resize, 1),
+                      weights=None, 
+                      classes=num_classes)
+```
+keras提供了主流架构，同时可以决定权重使用随机初始化还是使用imagenet预训练过的权重，返回值是一个keras的model实例，这个实例既可以通过手动搭建神经网络的前向过程来初始化，也可以通过__init__方法进行初始化层，用call方法完成神经网络的前向传播过程。
+
+```
+model.compile(optimizer=Adam(lr = .005), loss='categorical_crossentropy',
+              metrics=[categorical_crossentropy, categorical_accuracy, top_5_accuracy])
+print(model.summary())
+```
+compile函数用于神经网路的基础配置，例如反向传播中的优化算法，目标损失函数，分类任务中一般使用交叉熵函数，以及训练过程中的尺度函数（例如准确率等），对于多输出函数可以使用字典对每一个输出规定尺度量，以及样本权重等变量（当样本不平衡时也许有用？）\
+summary()函数可以打印神经网络中的架构图以及可训练变量和不可训练变量等信息。
+
+```
+epochs = 50
+history=model.fit_generator(generator=batches, 
+                            steps_per_epoch=batches.n//batch_size, 
+                            epochs=epochs, 
+                            validation_data=val_batches, 
+                            validation_steps=val_batches.n//batch_size,
+                            callbacks = callbacks)
+```
+model实例中的fit_generator方法:Fits the model on data yielded batch-by-batch by a Python generator.
+
+The generator is run in parallel to the model, for efficiency. For instance, this allows you to do real-time data augmentation on images on CPU in parallel to training your model on GPU.
+
+The use of keras.utils.Sequence guarantees the ordering and guarantees the single use of every input per epoch when using use_multiprocessing=True.\
+
+接受一个生成器函数(可以使用next方法迭代)或者一个keras.utils.Sequence对象作为输入，steps_per_epoch表示每一个epoch迭代的次数，一般表示dataset中元素的数量除以batch的大小，验证集（可以带权重），class_weight表示每一个类别附带的权重，指定多进程，是否随机打乱(只在step_per_epoch为None时有意义)，还可以在中断训练后重新指定训练的初始epoch（initial_epoch）
+
